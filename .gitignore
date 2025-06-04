@@ -1,0 +1,12 @@
+*.exe
+*.o
+*.txt
+*.json
+*.bin
+*.dll
+*.lib
+*.sh
+*.ps1
+*.bat
+*.DS_Store
+.env
