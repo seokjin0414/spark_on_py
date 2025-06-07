@@ -47,6 +47,7 @@ CREATE TABLE v1.test (
 )
 USING ICEBERG
 PARTITIONED BY (days(recorded_at));
+```
 
 ---
 
