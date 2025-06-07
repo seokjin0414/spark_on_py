@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.types import StructType, StructField, StringType, DoubleType, TimestampType
 from pyspark.sql.utils import AnalysisException
+from pyspark.sql import functions
 from typing import Optional, Dict
 from pydantic import BaseModel
 import json
@@ -85,7 +86,7 @@ def get_schema(sensor_type):
             StructField("t_pf", DoubleType(), True),
             StructField("kwh_sum", DoubleType(), True),
             StructField("kwh_export_sum", DoubleType(), True),
-            StructField("recorded_at", TimestampType(), False),
+            StructField("recorded_at", StringType(), False),
         ])
 
     if sensor_type == "iaq":
@@ -93,14 +94,14 @@ def get_schema(sensor_type):
             StructField("building_id", StringType(), False),
             StructField("measurement_point_id", StringType(), False),
             StructField("value", DoubleType(), True),
-            StructField("recorded_at", TimestampType(), False),
+            StructField("recorded_at", StringType(), False),
         ])
 
     if sensor_type == "test":
         return StructType([
             StructField("measurement_point_id", StringType(), False),
             StructField("value", DoubleType(), True),
-            StructField("recorded_at", TimestampType(), False),
+            StructField("recorded_at", StringType(), False),
         ])
 
     raise ValueError(f"Unknown sensor type: {sensor_type}")
@@ -135,13 +136,14 @@ def spark_insert(context):
         spark = SparkSession.builder.remote(spark_connect).getOrCreate()
 
         df: DataFrame = spark.createDataFrame(data, schema=schema)
-        df.write.format("iceberg").mode("append").save("v1.test")
+        df = df.withColumn("recorded_at", functions.to_timestamp("recorded_at"))
 
+        df.write.format("iceberg").mode("append").save("v1.test")
         print(f"##### Spark Insert End [building_id:{building_id}] [type:{sensor_type}] #####")
         return True
 
     except json.JSONDecodeError as e:
-        print(f"[INPUT ERROR][building_id:{building_id}][type:{sensor_type}] 잘못된 JSON: {e}")
+        print(f"[INPUT ERROR][building_id:{building_id}][type:{sensor_type}] wrong JSON: {e}")
         return False
 
     except AnalysisException as e:
