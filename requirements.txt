@@ -4,3 +4,4 @@ grpcio
 grpcio-status
 pandas
 python-dotenv
+pydantic
