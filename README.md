@@ -40,13 +40,17 @@ Before inserting any data, you **must create the target table** in Spark
 Here is a typical Iceberg table creation example:
 
 ```sql
-CREATE TABLE v1.test (
-    measurement_point_id STRING,
+CREATE TABLE my_catalog.v1.test (
+    measurement_point_id STRING NOT NULL,
     value DOUBLE,
     recorded_at TIMESTAMP
 )
-USING ICEBERG
-PARTITIONED BY (days(recorded_at));
+USING iceberg
+PARTITIONED BY (
+    days(recorded_at), bucket(8, measurement_point_id)
+)
+COMMENT 'TEST data info'
+TBLPROPERTIES ('format-version' = '2', 'write.format.default' = 'parquet');
 ```
 
 ---
