@@ -29,6 +29,7 @@ using PySpark through Spark Connect.
       - pydantic
       - pyarrow
       - grpcio
+      - grpcio-status
       - pandas
 
 ---
