@@ -62,6 +62,6 @@ If you have questions, need further support, or want to collaborate,
 please reach out via:
 
 - **Email:** sars21@hanmail.net
-- **LinkedIn:** (https://www.linkedin.com/in/seokjin-shin/)
+- **LinkedIn:** [https://www.linkedin.com/in/seokjin-shin/](https://www.linkedin.com/in/seokjin-shin/)
 
 Feel free to connect!
